@@ -1,3 +1,5 @@
+use std::{fs, io::Error, path::Path};
+
 use clap::Parser;
 use image::ImageFormat;
 
@@ -26,8 +28,15 @@ fn main() {
 fn convert_png_to_bmp(input_path: &str, output_path: &str) -> Result<(), image::ImageError> {
     let image = image::open(input_path)?; // PNG画像を開く
 
+    create_directory(output_path)?;
+
     // BMP形式で保存する
     image.save_with_format(output_path, ImageFormat::Bmp)?;
 
     Ok(())
+}
+
+fn create_directory(path: &str) -> Result<(), Error> {
+    let parent_dir = Path::new(path).parent().unwrap();
+    fs::create_dir_all(parent_dir)
 }
